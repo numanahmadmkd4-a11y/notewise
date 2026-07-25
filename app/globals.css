@@ -1,0 +1,638 @@
+/* ============================================
+   NoteWise — "Study Desk" design system
+   Ink navy + highlighter yellow, ruled-paper motif
+   ============================================ */
+
+:root {
+  --ink: #1E2A4A;
+  --ink-soft: #4B5875;
+  --ink-faint: #8891A6;
+  --paper: #EDF0F5;
+  --card: #FFFFFF;
+  --highlighter: #FFD93D;
+  --highlighter-soft: rgba(255, 217, 61, 0.4);
+  --coral: #E8555B;
+  --coral-soft: #FDEAEB;
+  --sage: #3F9469;
+  --sage-soft: #E7F5EE;
+  --line: #D8DEE8;
+  --margin: #D6555F;
+  --font-display: "Lora", Georgia, serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--paper);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ---------- Shell ---------- */
+
+.shell {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+}
+
+@media (max-width: 860px) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Sidebar: spiral notebook spine ---------- */
+
+.sidebar {
+  background: var(--ink);
+  color: #fff;
+  padding: 28px 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sidebar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 14px;
+  width: 0;
+  border-left: 2px dashed rgba(255, 255, 255, 0.18);
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding-left: 14px;
+}
+
+.brand-mark {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.5rem;
+  background: var(--highlighter);
+  color: var(--ink);
+  padding: 2px 8px;
+  border-radius: 3px;
+  transform: rotate(-2deg);
+  display: inline-block;
+}
+
+.brand-name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.3rem;
+}
+
+.tagline {
+  padding-left: 14px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.sidebar-section-label {
+  padding-left: 14px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.45);
+  margin-top: 8px;
+}
+
+.notes-list {
+  padding-left: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  max-height: 50vh;
+}
+
+.note-tab {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px 8px 8px 2px;
+  padding: 10px 12px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.note-tab:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.note-tab.active {
+  background: var(--highlighter);
+  border-color: var(--highlighter);
+}
+
+.note-tab.active .note-tab-title,
+.note-tab.active .note-tab-preview {
+  color: var(--ink);
+}
+
+.note-tab-title {
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: #fff;
+  margin: 0 0 2px;
+}
+
+.note-tab-preview {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.note-tab-delete {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  font-size: 0.75rem;
+  padding: 2px 4px;
+}
+
+.note-tab.active .note-tab-delete {
+  color: rgba(30, 42, 74, 0.6);
+}
+
+.note-tab-delete:hover {
+  color: var(--coral);
+}
+
+.empty-sidebar {
+  padding-left: 14px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ---------- Main content ---------- */
+
+.main {
+  padding: 40px 48px;
+  max-width: 920px;
+}
+
+@media (max-width: 640px) {
+  .main {
+    padding: 24px 20px;
+  }
+}
+
+.page-title {
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+
+.page-subtitle {
+  color: var(--ink-soft);
+  margin: 0 0 28px;
+  font-size: 0.98rem;
+}
+
+/* ---------- Add-note card ---------- */
+
+.composer {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 1px 2px rgba(30, 42, 74, 0.06), 0 8px 24px rgba(30, 42, 74, 0.05);
+  margin-bottom: 32px;
+  border: 1px solid var(--line);
+}
+
+.field-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  margin: 0 0 6px;
+  display: block;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  font-size: 0.98rem;
+  font-family: var(--font-body);
+  background: var(--paper);
+  color: var(--ink);
+  transition: border-color 0.15s ease;
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--ink);
+}
+
+.input {
+  margin-bottom: 14px;
+}
+
+.textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.word-count {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+  margin: 6px 0 0;
+  text-align: right;
+}
+
+.word-count.over {
+  color: var(--coral);
+  font-weight: 600;
+}
+
+/* ---------- File dropzone ---------- */
+
+.dropzone {
+  margin-top: 12px;
+  border: 2px dashed var(--line);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+  background: var(--paper);
+}
+
+.dropzone:hover,
+.dropzone.dragging {
+  border-color: var(--highlighter);
+  background: #fffbea;
+}
+
+.dropzone-icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.dropzone-text {
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+}
+
+.dropzone-text strong {
+  color: var(--ink);
+}
+
+.dropzone input[type="file"] {
+  display: none;
+}
+
+.file-chip {
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--sage-soft);
+  color: var(--sage);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.file-chip button {
+  background: none;
+  border: none;
+  color: var(--sage);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.extracting {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  margin-top: 8px;
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  padding: 11px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.92rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.08s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn.primary {
+  background: var(--ink);
+  color: #fff;
+  margin-top: 16px;
+}
+
+.btn.primary:hover {
+  background: #29385e;
+}
+
+.btn.primary:disabled {
+  background: var(--ink-faint);
+  cursor: not-allowed;
+}
+
+.btn.accent {
+  background: var(--highlighter);
+  color: var(--ink);
+}
+
+.btn.accent:hover {
+  box-shadow: 0 4px 14px rgba(255, 217, 61, 0.5);
+}
+
+.btn.accent:disabled {
+  background: #f0e7bd;
+  color: var(--ink-faint);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn.small {
+  padding: 5px 10px;
+  font-size: 0.78rem;
+}
+
+.error-text {
+  color: var(--coral);
+  font-size: 0.88rem;
+  margin: 10px 0 0;
+}
+
+/* ---------- Note detail / index card ---------- */
+
+.note-detail {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 28px;
+  border: 1px solid var(--line);
+  box-shadow: 0 1px 2px rgba(30, 42, 74, 0.06), 0 8px 24px rgba(30, 42, 74, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.note-detail::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 46px;
+  width: 0;
+  border-left: 1.5px solid var(--margin);
+  opacity: 0.25;
+}
+
+.note-detail-title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0 0 16px;
+}
+
+.note-text {
+  white-space: pre-wrap;
+  color: var(--ink-soft);
+  background: var(--paper);
+  padding: 16px 16px 16px 60px;
+  border-radius: 8px;
+  margin-bottom: 4px;
+  line-height: 1.9;
+  font-size: 0.95rem;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.empty-state {
+  color: var(--ink-faint);
+  font-size: 0.95rem;
+  text-align: center;
+  padding: 60px 20px;
+}
+
+/* ---------- Summary: highlighter marks ---------- */
+
+.summary-box {
+  margin-top: 28px;
+}
+
+.section-heading {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.summary-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.summary-list li {
+  position: relative;
+  padding-left: 4px;
+  line-height: 1.55;
+  font-size: 0.95rem;
+}
+
+.summary-list li .mark {
+  background: linear-gradient(180deg, transparent 60%, var(--highlighter-soft) 60%);
+  padding: 0 2px;
+}
+
+/* ---------- Quiz: scantron bubbles ---------- */
+
+.quiz-box {
+  margin-top: 32px;
+}
+
+.quiz-question {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px dashed var(--line);
+}
+
+.quiz-question:last-of-type {
+  border-bottom: none;
+}
+
+.q-text {
+  font-weight: 600;
+  margin: 0 0 10px;
+  font-size: 0.98rem;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  padding: 9px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  color: var(--ink);
+  transition: border-color 0.12s ease, background 0.12s ease;
+}
+
+.option:hover {
+  border-color: var(--ink-faint);
+}
+
+.bubble {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink-faint);
+  flex-shrink: 0;
+}
+
+.option.selected {
+  border-color: var(--ink);
+  background: var(--paper);
+}
+
+.option.selected .bubble {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.option.correct {
+  border-color: var(--sage);
+  background: var(--sage-soft);
+}
+
+.option.correct .bubble {
+  background: var(--sage);
+  border-color: var(--sage);
+}
+
+.option.wrong {
+  border-color: var(--coral);
+  background: var(--coral-soft);
+}
+
+.option.wrong .bubble {
+  background: var(--coral);
+  border-color: var(--coral);
+}
+
+.score-banner {
+  margin-top: 20px;
+  padding: 14px 18px;
+  background: var(--ink);
+  color: #fff;
+  border-radius: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ---------- Misc ---------- */
+
+.muted {
+  color: var(--ink-faint);
+}
+
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.35s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
